@@ -1,0 +1,57 @@
+resources:
+  jobs:
+    ELT_Spotify_DDL:
+      name: ELT-Spotify DDL
+      tasks:
+        - task_key: ddl_dm_artist
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/gold/ddl_dm_artist
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_dm_tempo
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/gold/ddl_dm_tempo
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_dm_track
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/gold/ddl_dm_track
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_ft_track_popularity
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/gold/ddl_ft_track_popularity
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_tb_bronze_search
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/bronze/ddl_tb_bronze_search
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_tb_track_artists
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/silver/ddl_tb_track_artists
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_tb_track_artists_invalidos
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/silver/ddl_tb_track_artists_invalidos
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_tb_tracks
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/silver/ddl_tb_tracks
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: ddl_tb_tracks_invalidos
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/elt-spotify-project/ddl/silver/ddl_tb_tracks_invalidos
+            source: WORKSPACE
+          environment_key: Default
+      queue:
+        enabled: true
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED

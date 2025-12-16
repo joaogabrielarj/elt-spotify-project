@@ -1,0 +1,102 @@
+resources:
+  jobs:
+    ELT_Spotify_SRC:
+      name: ELT-Spotify SRC
+      schedule:
+        quartz_cron_expression: 12 0 13 * * ?
+        timezone_id: UTC
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: src_spotify_api_extraction
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/landing/src_spotify_api_extraction
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_bronze_ingestion
+          depends_on:
+            - task_key: src_spotify_api_extraction
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/bronze/src_bronze_ingestion
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_tb_track_artists
+          depends_on:
+            - task_key: src_bronze_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/silver/src_tb_track_artists
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_tb_tracks
+          depends_on:
+            - task_key: src_bronze_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/silver/src_tb_tracks
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_dm_artists
+          depends_on:
+            - task_key: src_tb_track_artists
+            - task_key: src_tb_tracks
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/gold/src_dm_artist
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_dm_tempo
+          depends_on:
+            - task_key: src_tb_tracks
+            - task_key: src_tb_track_artists
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/gold/src_dm_tempo
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_dm_track
+          depends_on:
+            - task_key: src_tb_tracks
+            - task_key: src_tb_track_artists
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/gold/src_dm_track
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_ft_track_popularity
+          depends_on:
+            - task_key: src_tb_track_artists
+            - task_key: src_tb_tracks
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/gold/src_ft_track_popularity
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_vw_dm_artists
+          depends_on:
+            - task_key: src_dm_artists
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/diamond/src_vw_dm_artist
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_vw_dm_tempo
+          depends_on:
+            - task_key: src_dm_tempo
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/diamond/src_vw_dm_tempo
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_vw_dm_track
+          depends_on:
+            - task_key: src_dm_track
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/diamond/src_vw_dm_track
+            source: WORKSPACE
+          environment_key: Default
+        - task_key: src_vw_ft_track_popularity
+          depends_on:
+            - task_key: src_ft_track_popularity
+          notebook_task:
+            notebook_path: /Workspace/Users/joaogabrielaraujo30@gmail.com/etl-spotify-project/src/diamond/src_vw_ft_track_popularity
+            source: WORKSPACE
+          environment_key: Default
+      queue:
+        enabled: true
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED
